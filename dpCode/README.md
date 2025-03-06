@@ -1,15 +1,37 @@
-# emp-aby
-![arm](https://github.com/emp-toolkit/emp-aby/workflows/arm/badge.svg)
-![x86](https://github.com/emp-toolkit/emp-aby/workflows/x86/badge.svg)
+# Secure Noise Sampling in MPC for DP
 
-<img src="https://raw.githubusercontent.com/emp-toolkit/emp-readme/master/art/logo-full.jpg" width=300px/>
+## Setup
 
-# Installation
-1. `wget https://raw.githubusercontent.com/emp-toolkit/emp-readme/master/scripts/install.py`
-2. `python install.py -install -tool -ot`
-    1. By default it will build for Release. `-DCMAKE_BUILD_TYPE=[Release|Debug]` option is also available.
-    2. No sudo? Change [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/v2.8.8/cmake.html#variable%3aCMAKE_INSTALL_PREFIX).
-    3. On Mac [homebrew](https://brew.sh/) is needed for installation. 
+### Install dependencies
 
+Install [EMP](https://github.com/emp-toolkit/emp-tool), [OpenFHE](https://github.com/openfheorg/openfhe-development) and [Scalable Mixed-Mode MPC](https://github.com/radhika1601/ScalableMixedModeMPC.git)
 
+### Build
 
+```
+cd dpCode;
+mkdir build; cd build;
+cmake ..
+make -j4
+```
+
+## Benchmark
+
+To run the tests use the following command:
+
+```
+./build/bin/test_bench <party> <port> <num-party> <ip-config path> <log-table-size> <statistical-sec>
+```
+
+### IP Config
+
+To run the tests across multiple servers you can pass the ip configuration as a txt file with the following format.
+
+```
+<ip1> <port1>
+<ip2> <port2>
+```
+
+### Prior Work
+
+For comparison use code from [Secure Sampling Benchmark](https://github.com/yuchengxj/Secure-sampling-benchmark) with [MP-SPDZ](https://github.com/data61/MP-SPDZ)

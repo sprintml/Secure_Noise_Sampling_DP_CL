@@ -3,7 +3,6 @@ getcontext().prec = 224 # increase precision
 
 import math
 import numpy as np
-import pandas as pd
 from scipy.stats import norm
 from datetime import datetime
 import pickle
@@ -12,10 +11,18 @@ import json
 
 import matplotlib.pyplot as plt
 
+# see __main__ at the bottom of this script for example usage
 
 # ----------------------------------------------------------------
 # implementation of dice ensemble approximation
 # ----------------------------------------------------------------
+
+# note: at higher numbers of dice / distributions requiring greater precision this implementation may run 
+# into numerical instability due to fixed precision arithmetic. 
+# For a real-world implementation in sensitive applications, look up table values
+# should be computed using arbitrary precision arithmetic. Performance on runtime benchmarks
+# for our noise sampling protocol (performed in another section of this repo) is unaffected
+# by this distinction, since our protocol has the same runtime regardless of the values in the table.
 
 class DiceEnsemble:
     def __init__(self, T, t_pmf):
@@ -513,13 +520,6 @@ def plot_table_size_vs_sd(sec_param = 64):
 # constructing dice ensembles
 # --------------------------------
 
-# note: at higher numbers of dice this implementation may run 
-# into numerical instability due to fixed precision arithmetic. 
-# For a real-world implementation in sensitive applications, look up table values
-# should be computed using arbitrary precision arithmetic. Performance on runtime benchmarks
-# for our noise sampling protocol (performed in another section of this repo) is unaffected
-# by this distinction, since our protocol has the same runtime regardless of the values in the table.
-
 def decimal_test_toy():
     toy_example = {}
     toy_example[1] = Decimal('0.51')
@@ -606,3 +606,20 @@ def dea_discrete_gaussian(sigma=1.0, n_dice=64, filename=None, save=False):
         sample_dict = pmf_to_sample_dict(approx_pmf)
         save_as_json(sample_dict, f + ".json")
     return de
+
+
+
+
+if __name__ == '__main__':
+    # examples of how to use the functions in this script:
+    ndice = 64
+    dice_ensemble = dea_discrete_gaussian(sigma=1.0, n_dice=ndice) # run Algorithm 4 for a discrete gaussian at varying parameters
+    sample_dict = pmf_to_sample_dict(dice_ensemble.em_mass_ls[ndice-1])
+    de_samples = [sample_from_dict(sample_dict) for i in range(10)] # sample 10 values from the dice ensemble
+    print("samples from discrete gaussian dice ensemble with sigma=1.0: ", de_samples)
+    print("values in first lookup table: ", dice_ensemble.body[1])
+    print("values in last lookup table: ", dice_ensemble.body[64])
+    print("--------------------------------")
+    print("dice ensemble for a simple toy distribution:")
+    decimal_test_toy() # run algorithm 4 on a simple toy distribution
+    #plot_table_size_vs_sd() # uncomment to see plot of required table size vs standard deviation for the discrete gaussian

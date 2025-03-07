@@ -17,7 +17,9 @@ import matplotlib.pyplot as plt
 # implementation of dice ensemble approximation
 # ----------------------------------------------------------------
 
-# note: at higher numbers of dice / distributions requiring greater precision this implementation may run 
+# note: we use the python decimal package with 224 places of precision (default 28) to improve the numerical stability
+# of this implementation compared to a floating point number implementation. However, at higher numbers of dice and for 
+# distributions with pmf values requiring very high precision representations, this implementation may still run into
 # into numerical instability due to fixed precision arithmetic. 
 # For a real-world implementation in sensitive applications, look up table values
 # should be computed using arbitrary precision arithmetic. Performance on runtime benchmarks

@@ -26,8 +26,6 @@ from helper_secagg import (mod_vector_m, get_actual_sentivity, postprocessing_cl
 
 
 
-from priv_benchmark_interface import init_dist_noise_interface
-
 from per_example_grad_helpers import calc_sample_norms, calc_clipping_factors
 from dp_distributed_discrete_gaussian_helper import ddgauss_params, ddgauss_epsilon
 from discrete_noise_sampler import sample_discrete_gaussian
